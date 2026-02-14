@@ -36,7 +36,3 @@ This project demonstrates an end-to-end data analytics solution, connecting a cl
 3. Review the `queries.sql` file to understand the data transformation logic used in the cloud.
 Brahim Hamatti
 www.linkedin.com/in/brahim-hamatti-7157731a2
-
----
-**Author:** [Your Name]  
-**LinkedIn:** [Your LinkedIn Profile Link]
