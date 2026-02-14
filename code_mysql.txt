@@ -1,0 +1,47 @@
+create database sales;
+create schema sales ;
+create stage sales;
+CREATE OR REPLACE VIEW sales_performance_view AS
+WITH orders_joined AS
+
+(
+    SELECT 
+        t1.order_id,
+        t2.c2 AS order_date,
+        -- تحويل تاريخ الطلب النصي إلى تنسيق YYYY-MM
+        TO_CHAR(TO_DATE(t2.c2, 'DD-MM-YYYY'), 'YYYY-MM') AS year_month,
+        t1.category,
+        t1.sub_category,
+        t1.amount,
+        t1.profit,
+        t1.quantity
+    FROM orders_details t1
+    LEFT JOIN orders_liste t2
+        ON t1.order_id = t2.c1
+),
+
+target_fixed AS
+(
+    SELECT
+        category,
+        target,
+        -- تحويل تاريخ الهدف إلى تنسيق YYYY-MM للربط
+        TO_CHAR(TO_DATE(month_of_order_date, 'MON-YY'), 'YYYY-MM') AS year_month
+    FROM sales_target
+)
+
+SELECT 
+    o.order_id,
+    o.order_date,
+    o.year_month,
+    o.category,
+    o.sub_category,
+    o.amount,    -- سيظهر الآن
+    o.profit,    -- سيظهر الآن
+    o.quantity,
+    t.target AS monthly_category_target -- الهدف الشهري للقسم ككل
+FROM orders_joined o
+LEFT JOIN target_fixed t
+    ON TRIM(o.category) = TRIM(t.category)
+    AND o.year_month = t.year_month;
+    SELECT CURRENT_WAREHOUSE();
